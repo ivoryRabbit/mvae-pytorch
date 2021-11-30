@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 import time
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 
 
 class Trainer(object):
