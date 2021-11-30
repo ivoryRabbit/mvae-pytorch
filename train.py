@@ -5,7 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 
-from setup import set_env
+from src.setup import set_env
 from src.dataset import OneHotEncoding, Dataset
 from src.model import MVAE
 from src.loss_function import LossFunction
