@@ -130,6 +130,6 @@ class Trainer(object):
                     metrics[metric] = metrics.get(metric, []) + [value]
 
         mean_loss = np.mean(losses)
-        mean_metrics = {metric: np.mean(values) for metric, values in metrics.items()}
+        mean_metrics = {metric: np.mean(value) for metric, value in metrics.items()}
 
         return mean_loss, mean_metrics

@@ -47,7 +47,7 @@ class Metric(object):
         Returns:
         """
         hits = np.take_along_axis(targets, indices, axis=1)
-        return np.max(hits, axis=1) / hits.shape[0]
+        return np.sum(np.max(hits, axis=1)) / hits.shape[0]
 
     def precision(self, targets, indices):
         """
