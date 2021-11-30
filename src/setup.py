@@ -32,9 +32,9 @@ def get_args():
     parser.add_argument("--user-id", type=int, help="user id")
 
     # directions
+    parser.add_argument("--data-dir", type=str, default=os.environ["SM_CHANNEL_DATA_DIR"])
     parser.add_argument("--model-dir", type=str, default=os.environ["SM_MODEL_DIR"])
     parser.add_argument("--checkpoint-dir", type=str, default=os.environ["SM_OUTPUT_DATA_DIR"])
-    parser.add_argument("--data-dir", type=str, default=os.environ["SM_CHANNEL_TRAINING"])
 
     args = parser.parse_args()
     return args
