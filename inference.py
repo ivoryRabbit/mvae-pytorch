@@ -5,7 +5,7 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 
 from src.model import MVAE
-from src.dataset import OneHot, Dataset
+from src.dataset import OneHotEncoding, Dataset
 from utils import upload_parquet_to_s3
 
 
@@ -19,7 +19,7 @@ model_state = torch.load("trained/mvae.pt", map_location=device)
 model = MVAE(**model_state["args"])
 model.load_state_dict(model_state["model"])
 
-dataset = Dataset(target_user_hist, transforms=[OneHot(model_state["args"]["input_size"])])
+dataset = Dataset(target_user_hist, transforms=[OneHotEncoding(model_state["args"]["input_size"])])
 dataloader = DataLoader(dataset, batch_size=256, shuffle=False)
 
 item_info = (

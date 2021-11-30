@@ -26,8 +26,8 @@ if __name__ == "__main__":
     checkpoint_path = os.path.join(args.checkpoint_dir, args.model_name)
     model_path = os.path.join(args.model_dir, args.model_name)
 
-    train_df = pd.read_csv(train_path).head(1000)
-    valid_df = pd.read_csv(valid_path).head(1000)
+    train_df = pd.read_csv(train_path)
+    valid_df = pd.read_csv(valid_path)
     item_map_df = pd.read_csv(item_path)
 
     input_size = n_items = len(item_map_df)
