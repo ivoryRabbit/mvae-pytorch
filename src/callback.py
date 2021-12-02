@@ -4,11 +4,17 @@ from typing import Dict, Any
 
 
 class EarlyStopping(object):
-    def __init__(self, args, checkpoint_path: str, min_mode: bool = True):
+    def __init__(
+            self,
+            checkpoint_path: str,
+            patience: int,
+            delta: float = 0.0,
+            min_mode: bool = True
+    ):
         self.checkpoint_path = checkpoint_path
         self.min_mode = min_mode
-        self.patience = args.patience
-        self.delta = args.delta
+        self.patience = patience
+        self.delta = delta
 
         self.is_early_stop = False
         self.count = 0
@@ -37,11 +43,14 @@ class EarlyStopping(object):
     def __update_best(self, eval_loss: float):
         self.best_eval_loss = eval_loss
 
-    def _get_score(self, loss: float):
+    def _get_score(self, loss: float) -> float:
         return loss if self.min_mode else -loss
 
-    def save_checkpoint(self, checkpoint: Dict[str, Any]):
-        torch.save(checkpoint, self.checkpoint_path)
+    def save_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
+        with open(self.checkpoint_path, "wb") as f:
+            torch.save(checkpoint, f)
 
     def load_checkpoint(self) -> Dict[str, Any]:
-        return torch.load(self.checkpoint_path)
+        with open(self.checkpoint_path, "rb") as f:
+            checkpoint = torch.load(f)
+        return checkpoint

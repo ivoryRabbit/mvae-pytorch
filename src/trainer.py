@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import time
+from tqdm import tqdm
 
 
 class Trainer(object):
@@ -91,7 +92,7 @@ class Trainer(object):
         self.loss_function.train()
         losses = []
 
-        for batch in self.train_dataloader:
+        for batch in tqdm(self.train_dataloader):
             self.optimizer.zero_grad()
 
             inputs = batch["inputs"].to(self.device)
@@ -114,7 +115,7 @@ class Trainer(object):
         metrics = dict()
 
         with torch.no_grad():
-            for batch in self.valid_dataloader:
+            for batch in tqdm(self.valid_dataloader):
                 inputs = batch["inputs"].to(self.device)
                 targets = batch["targets"].to(self.device)
 

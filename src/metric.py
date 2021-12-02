@@ -3,8 +3,8 @@ import numpy as np
 
 
 class Metric(object):
-    def __init__(self, args):
-        self.eval_k = args.eval_k
+    def __init__(self, eval_k: int):
+        self.eval_k = eval_k
         self.dcg_weight = self.get_weight()
 
     def get_weight(self):

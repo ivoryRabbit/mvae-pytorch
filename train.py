@@ -3,7 +3,7 @@ import torch
 import pandas as pd
 from torch.utils.data import DataLoader
 
-from src.setup import set_env
+from setup import set_env
 from src.dataset import OneHotEncoding, Dataset
 from src.model import MVAE
 from src.loss_function import LossFunction
@@ -47,8 +47,8 @@ if __name__ == "__main__":
     valid_dataset = Dataset(valid_df, transforms=transforms)
     valid_dataloader = DataLoader(valid_dataset, batch_size=args.batch_size, shuffle=False)
 
-    early_stopping = EarlyStopping(args, checkpoint_path)
-    metric = Metric(args)
+    early_stopping = EarlyStopping(checkpoint_path, patience=args.patience, delta=args.delta)
+    metric = Metric(eval_k=args.eval_k)
 
     trainer = Trainer(
         args,
@@ -63,10 +63,5 @@ if __name__ == "__main__":
     trainer.to(device)
     trainer.fit(args.n_epochs)
 
-    model_state = dict(
-        model=model.state_dict(),
-        args=dict(input_size=n_items, hidden_dim=args.hidden_dim)
-    )
-
-    with open(model_path, "wb") as f:
-        torch.save(model_state, model_path)
+    params = vars(args)
+    model.save(model_path, params)

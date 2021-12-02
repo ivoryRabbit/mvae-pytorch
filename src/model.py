@@ -1,5 +1,6 @@
 import torch
 from torch import nn
+from typing import Dict, Any
 
 
 class Encoder(nn.Module):
@@ -7,16 +8,16 @@ class Encoder(nn.Module):
         super(Encoder, self).__init__()
 
         self.hidden_layer = nn.Sequential(
-            nn.Linear(input_size, hidden_dim),
-            nn.ELU()
+            nn.Linear(input_size, 2 * hidden_dim),
+            nn.Tanh(),
         )
         self.mean = nn.Sequential(
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.Tanh()
+            nn.Linear(2 * hidden_dim, hidden_dim),
+            nn.Tanh(),
         )
         self.var = nn.Sequential(
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.Tanh()
+            nn.Linear(2 * hidden_dim, hidden_dim),
+            nn.Tanh(),
         )
 
     def forward(self, inputs):
@@ -42,8 +43,10 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
 
         self.output_layer = nn.Sequential(
-            nn.Linear(hidden_dim, input_size),
-            nn.Softmax(dim=1)
+            nn.Linear(hidden_dim, 2 * hidden_dim),
+            nn.Tanh(),
+            nn.Linear(2 * hidden_dim, input_size),
+            nn.Softmax(dim=1),
         )
 
     def forward(self, inputs):
@@ -62,10 +65,17 @@ class MVAE(nn.Module):
 
     def forward(self, inputs):
         mean, log_var = self.encoder(inputs)
+        z = self.sampler(mean, log_var)
+        outputs = self.decoder(z)
+
         if self.training:
-            z = self.sampler(mean, log_var)
-            outputs = self.decoder(z)
             return outputs, mean, log_var
-        else:
-            outputs = self.decoder(mean)
-            return outputs
+        return outputs
+
+    def save(self, model_path: str, params: Dict[str, Any]) -> None:
+        model_state = dict(
+            model=self.cpu().state_dict(),
+            args=dict(input_size=self.input_size, **params)
+        )
+        with open(model_path, "wb") as f:
+            torch.save(model_state, f)

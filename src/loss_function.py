@@ -9,10 +9,9 @@ class LossFunction(nn.Module):
         self.anneal_rate = anneal_rate
 
     def forward(self, outputs, targets, mean=None, log_var=None):
-        bce = -torch.sum(targets * torch.log(outputs) * self.penalty_term, dim=1)
-
         if self.training:
+            bce = -torch.sum(targets * torch.log(outputs) * self.penalty_term, dim=1)
             kld = -0.5 * torch.sum(1 + log_var - torch.pow(mean, 2) - torch.exp(log_var), dim=1)
             return torch.mean(bce + kld * self.anneal_rate, dim=0)
-
+        bce = -torch.sum(targets * torch.log(outputs), dim=1)
         return torch.mean(bce, dim=0)

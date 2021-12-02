@@ -29,11 +29,11 @@ class DenseIndexing(Transform):
 
 
 class OneHotEncoding(Transform):
-    def __init__(self, output_size: int):
-        self.output_size = output_size
+    def __init__(self, input_size: int):
+        self.input_size = input_size
 
     def to_one_hot(self, indices) -> np.ndarray:
-        one_hot = np.zeros(shape=(self.output_size, ), dtype=np.float32)
+        one_hot = np.zeros(shape=(self.input_size, ), dtype=np.float32)
         one_hot[indices] = 1.0
         return one_hot
 
