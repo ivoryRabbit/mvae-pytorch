@@ -3,7 +3,7 @@ import torch
 import pandas as pd
 from torch.utils.data import DataLoader
 
-from setup import set_env
+from argparser import set_env
 from src.dataset import OneHotEncoding, Dataset
 from src.model import MVAE
 from src.loss_function import LossFunction
@@ -26,8 +26,8 @@ if __name__ == "__main__":
     checkpoint_path = os.path.join(args.checkpoint_dir, args.model_name)
     model_path = os.path.join(args.model_dir, args.model_name)
 
-    train_df = pd.read_csv(train_path)
-    valid_df = pd.read_csv(valid_path)
+    train_df = pd.read_csv(train_path).head(1000)
+    valid_df = pd.read_csv(valid_path).head(1000)
     item_map_df = pd.read_csv(item_path)
 
     input_size = n_items = len(item_map_df)
