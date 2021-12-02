@@ -72,10 +72,10 @@ class MVAE(nn.Module):
             return outputs, mean, log_var
         return outputs
 
-    def save(self, model_path: str, params: Dict[str, Any]) -> None:
+    def save(self, model_path: str, args: Dict[str, Any]) -> None:
         model_state = dict(
-            model=self.cpu().state_dict(),
-            args=dict(input_size=self.input_size, **params)
+            weights=self.cpu().state_dict(),
+            args=dict(input_size=self.input_size, **args)
         )
         with open(model_path, "wb") as f:
             torch.save(model_state, f)

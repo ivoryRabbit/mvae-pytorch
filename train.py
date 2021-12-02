@@ -63,5 +63,4 @@ if __name__ == "__main__":
     trainer.to(device)
     trainer.fit(args.n_epochs)
 
-    params = vars(args)
-    model.save(model_path, params)
+    model.save(model_path, args=vars(args))
